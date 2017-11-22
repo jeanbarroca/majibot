@@ -1,0 +1,35 @@
+{
+  "name": "majibot",
+  "version": "1.0.0",
+  "description": "Chatbot for Open311 // Made in Tanzania",
+  "main": "app.js",
+  "scripts": {
+    "start" : "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeanbarroca/majibot.git"
+  },
+  "keywords": [
+    "Facebook",
+    "Messenger",
+    "Book",
+    "Microsoft",
+    "Bot",
+    "Framework",
+    "NodeJS"
+  ],
+  "author": "Jean Barroca",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jeanbarroca/majibot/issues"
+  },
+  "homepage": "https://github.com/jeanbarroca/majibot#readme",
+  "dependencies": {
+    "botbuilder": "^3.12.0",
+    "dotenv-extended": "^2.0.1",
+    "request": "^2.83.0",
+    "restify": "^6.3.4"
+  }
+}
