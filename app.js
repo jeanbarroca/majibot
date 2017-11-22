@@ -4,6 +4,7 @@ require('./connectorSetup')();
 
 require('./dialogs/selectLocale')();
 require('./dialogs/submitProblem')();
+require('./dialogs/submitPhone')();
 
 /*
 require('./dialogs/checkProblems.js')();

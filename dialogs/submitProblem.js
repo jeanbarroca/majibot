@@ -18,7 +18,7 @@ module.exports = () => {
         },
 
         // Step 2: Request location
-        (session, args, next) => {
+        (session) => {
             quickReplies.LocationPrompt.beginDialog(session);
         },
         (session, args, next) => {
@@ -32,6 +32,12 @@ module.exports = () => {
             let options =  session.localizer.gettext(session.preferredLocale(), "AdditionalDetailsOptions");
             builder.Prompts.choice(session, 'AdditionalDetailsPrompt', options);
         },
+        (session, next) => {
+            // is user's phone set?
+            var phone = session.userData.Phone;
+            if (!phone) {
+            session.beginDialog('submitPhone');
+        }
     ]);
 
     const getServices = (url, callback) => {

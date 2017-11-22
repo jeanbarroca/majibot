@@ -16,6 +16,7 @@ module.exports = () => {
     quickReplies.LocationPrompt.create(bot);
 
     bot.use(quickReplies.QuickRepliesMiddleware);
+    bot.set('persistUserData', true);
 
     // Setup Restify Server
     const server = restify.createServer();
