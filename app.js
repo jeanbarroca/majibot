@@ -1,9 +1,9 @@
 require('dotenv-extended').load();
 
-require('./connectorSetup.js')();
+require('./connectorSetup')();
 
-require('./dialogs/selectLocale.js')();
-require('./dialogs/submitProblem.js')();
+require('./dialogs/selectLocale')();
+require('./dialogs/submitProblem')();
 
 /*
 require('./dialogs/checkProblems.js')();
