@@ -26,6 +26,13 @@ module.exports = () => {
                 var location = args.response.entity;
                 session.send(`Your location is : ${location.title}, Longitude: ${location.coordinates.long}, Latitude: ${location.coordinates.lat}`);
             }
+
+            // is user's phone set? if not, request it.
+
+            var phone = session.userData.Phone;
+            if (!phone) {
+                session.beginDialog('submitPhone');
+            }
         },
         // Step 3: Additional details
         (session, args, next) => {
