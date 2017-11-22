@@ -11,6 +11,12 @@ module.exports = () => {
 
     global.bot = new builder.UniversalBot(connector);
 
+    global.quickReplies = require('botbuilder-quickreplies');
+
+    quickReplies.LocationPrompt.create(bot);
+
+    bot.use(quickReplies.QuickRepliesMiddleware);
+
     // Setup Restify Server
     const server = restify.createServer();
 
