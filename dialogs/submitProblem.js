@@ -36,7 +36,8 @@ module.exports = () => {
             // is user's phone set?
             var phone = session.userData.Phone;
             if (!phone) {
-            session.beginDialog('submitPhone');
+                session.beginDialog('submitPhone');
+            }
         }
     ]);
 
