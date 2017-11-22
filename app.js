@@ -1,11 +1,11 @@
 require('dotenv-extended').load();
+
 require('./connectorSetup.js')();
-require('./APIHelpers.js')();
 
 require('./dialogs/selectLocale.js')();
+require('./dialogs/submitProblem.js')();
 
 /*
-require('./dialogs/submitProblem.js')();
 require('./dialogs/checkProblems.js')();
 require('./dialogs/checkMyBill.js')();
 */
@@ -14,7 +14,7 @@ require('./dialogs/checkMyBill.js')();
 // Entry point of the bot
 bot.dialog('/', [
     function (session) {
-        session.replaceDialog('/selectLocale');
+        session.replaceDialog('/submitProblem');
     }
 ]);
 
