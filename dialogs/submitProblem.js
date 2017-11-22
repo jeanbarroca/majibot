@@ -23,7 +23,7 @@ module.exports = () => {
                     choices.push(results[i].service_name);
                 }
 
-                builder.Prompts.choice(session, 'submit_problem', choices);
+                builder.Prompts.choice(session, 'SubmitProblem', choices);
             });
 
         }]);
