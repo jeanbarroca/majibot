@@ -13,18 +13,27 @@ module.exports = () => {
     };
 
     bot.dialog('/submitProblem', [
-        (session) => {
+        (session, next) => {
 
             getServices('http://www.mopa.co.mz/georeport/v2/services.json', (err, results) => {
-
-                let choices = [];
-
-                for (let i = 0; i < results.length; i++) {
-                    choices.push(results[i].service_name);
+                if (err) {
+                    session.error(err);
+                } else {
+                    let choices = [];
+                    for (let i = 0; i < results.length; i++) {
+                        choices.push(results[i].service_name);
+                    }
+                    builder.Prompts.choice(session, 'SubmitProblem', choices);
                 }
-
-                builder.Prompts.choice(session, 'SubmitProblem', choices);
             });
-
+        },
+        (session, args, next) => {
+            quickReplies.LocationPrompt.beginDialog(session);
+        },
+        (session, args, next) => {
+            if (args.response) {
+                var location = args.response.entity;
+                session.send(`Your location is : ${location.title}, Longitude: ${location.coordinates.long}, Latitude: ${location.coordinates.lat}`);
+            }
         }]);
 };
