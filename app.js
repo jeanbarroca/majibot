@@ -2,6 +2,8 @@ require('dotenv-extended').load();
 require('./connectorSetup.js')();
 require('./APIHelpers.js')();
 
+require('./dialogs/selectLocale.js')();
+
 /*
 require('./dialogs/submitProblem.js')();
 require('./dialogs/checkProblems.js')();
@@ -12,14 +14,14 @@ require('./dialogs/checkMyBill.js')();
 // Entry point of the bot
 bot.dialog('/', [
     function (session) {
-        session.replaceDialog('/promptButtons');
+        session.replaceDialog('/selectLocale');
     }
 ]);
 
 bot.dialog('/promptButtons', [
     (session) => {
         let choices = ['Submit a problem', 'Check problems I\'ve submitted', 'Check my bill'];
-        builder.Prompts.choice(session, 'How can I help you today?', choices);
+        builder.Prompts.choice(session, 'InitialPrompt', choices);
     },
     (session, results) => {
         if (results.response) {
