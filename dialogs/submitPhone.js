@@ -5,6 +5,7 @@ module.exports = () => {
         },
         (session, results, next) => {
             session.userData.Phone = results.response;
+            session.endDialog();
         }
 
     ]);

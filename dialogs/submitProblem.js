@@ -7,7 +7,6 @@ module.exports = () => {
         (session, next) => {
 
             getServices(process.env.OPEN311_ENDPOINT + 'services.json', (err, results) => {
-                console.log(process.env.OPEN311_ENDPOINT)
                 if (err) {
                     session.error(err);
                 } else {
@@ -29,22 +28,15 @@ module.exports = () => {
 
             // is user's phone set? if not, request it.
 
-            var phone = session.userData.Phone;
+            let phone = session.userData.Phone;
             if (!phone) {
-                session.beginDialog('submitPhone');
+                session.replaceDialog('/submitPhone');
             }
         },
         // Step 3: Additional details
         (session, args, next) => {
             let options =  session.localizer.gettext(session.preferredLocale(), "AdditionalDetailsOptions");
             builder.Prompts.choice(session, 'AdditionalDetailsPrompt', options);
-        },
-        (session, next) => {
-            // is user's phone set?
-            var phone = session.userData.Phone;
-            if (!phone) {
-                session.replaceDialog('submitPhone');
-            }
         }
     ]);
 
