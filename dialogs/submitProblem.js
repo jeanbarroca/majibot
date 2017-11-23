@@ -46,9 +46,9 @@ module.exports = () => {
             if (args.response) {
                 let location = args.response.entity;
 
-                session.send(`Your location is : ${location.title}, Longitude: ${location.coordinates.long}, Latitude: ${location.coordinates.lat}`);
-                session.conversationData.lat = args.response.entity.location.coordinates.lat;
-                session.conversationData.long = args.response.entity.location.coordinates.long;
+                session.send(`Your location is: Longitude: ${location.coordinates.long}, Latitude: ${location.coordinates.lat}`);
+                session.conversationData.lat = location.coordinates.lat;
+                session.conversationData.long = location.coordinates.long;
 
                 // is user's phone set? if not, request it.
                 if (!session.userData.Phone) {
