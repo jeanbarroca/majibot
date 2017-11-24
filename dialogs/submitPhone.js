@@ -9,7 +9,7 @@ module.exports = () => {
             /* TODO: Confirm phone number after submission.
                TODO: Validate phone number */
 
-            session.endDialog();
+            session.replaceDialog('/submitRequest');
         }
 
     ]);
