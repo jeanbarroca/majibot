@@ -17,7 +17,7 @@ module.exports = () => {
 
     bot.dialog('/requestServiceCategory', [
         (session, next) => {
-            getServices(process.env.OPEN311_ENDPOINT + 'services.json', (err, results) => {
+            getServices((err, results) => {
                 if (err) {
                     session.error(err);
                 } else {
