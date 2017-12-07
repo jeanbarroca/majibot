@@ -21,7 +21,7 @@ module.exports = () => {
     bot.set('persistUserData', true);
 
     // Do not persist conversationData
-    bot.set(`persistConversationData`, false);
+    bot.set(`persistConversationData`, true);
 
     // Setup Restify Server
     const server = restify.createServer();
