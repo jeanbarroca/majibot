@@ -11,7 +11,7 @@ module.exports = () => {
         // Step 3: Additional details
         (session, results, next) => {
             session.beginDialog('/requestAdditionalDetails');
-        }
+        },
         // Step 4: Submit request
         (session) => {
             session.beginDialog('/submitRequest');
