@@ -8,10 +8,13 @@ module.exports = () => {
         (session, results, next) => {
             session.beginDialog('/requestLocation');
         },
-
         // Step 3: Additional details
         (session, results, next) => {
             session.beginDialog('/requestAdditionalDetails');
+        }
+        // Step 4: Submit request
+        (session) => {
+            session.beginDialog('/submitRequest');
         }
     ]);
 
@@ -72,6 +75,25 @@ module.exports = () => {
             session.conversationData.description = results.response.entity;
             session.send(`Success!\n Service request description\n Phone: ${session.userData.Phone}\n Service code: ${session.conversationData.service_code}\n Coordinates: ${session.conversationData.lat}, ${session.conversationData.long}\n Description: ${session.conversationData.description}`);
             session.replaceDialog('/');
+        }
+    ]);
+
+    bot.dialog('/submitRequest', [
+        (session, next) => {
+            let serviceRequest = [];
+            serviceRequest.service_code = session.conversationData.service_code;
+            serviceRequest.lat = session.conversationData.lat;
+            serviceRequest.long = session.conversationData.long;
+            serviceRequest.phone = session.userData.Phone;
+
+            submitServiceRequest(serviceRequest, (err, results) => {
+                if (err) {
+                    session.error(err);
+                } else {
+                    session.send(`Thanks! ${results.service_request_id}`);
+                    session.endDialog();
+                }
+            });
         }
     ]);
 };
