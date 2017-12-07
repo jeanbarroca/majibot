@@ -14,7 +14,7 @@ module.exports = () => {
     };
 
     global.submitServiceRequest = (serviceRequest, callback) => {
-        request.post(process.env.OPEN311_ENDPOINT + 'services.json', {form: serviceRequest}, (error, response, body) => {
+        request.post(process.env.OPEN311_ENDPOINT + 'requests.json', {form: serviceRequest}, (error, response, body) => {
             if (!error && response && response.statusCode == 200) {
                 let result = JSON.parse(body);
                 console.log(result);
