@@ -57,11 +57,6 @@ module.exports = () => {
                 if (!session.userData.Phone) {
                     session.replaceDialog('/submitPhone');
                 }
-
-                session.replaceDialog('/requestAdditionalDetails');
-            }
-            else {
-                session.replaceDialog('/requestAdditionalDetails');
             }
         }
     ]);
@@ -74,7 +69,6 @@ module.exports = () => {
         (session, results) => {
             session.conversationData.description = results.response.entity;
             session.send(`Success!\n Service request description\n Phone: ${session.userData.Phone}\n Service code: ${session.conversationData.service_code}\n Coordinates: ${session.conversationData.lat}, ${session.conversationData.long}\n Description: ${session.conversationData.description}`);
-            session.replaceDialog('/');
         }
     ]);
 
