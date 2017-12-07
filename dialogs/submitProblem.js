@@ -23,7 +23,7 @@ module.exports = () => {
                 } else {
                     let choices = results.map((service) => service.service_name);
                     session.dialogData.services = results;
-                    builder.Prompts.choice(session, 'SubmitProblem', choices);
+                    builder.Prompts.choice(session, 'SubmitProblem', choices, {'listStyle': 3});
                 }
             });
         },
@@ -66,7 +66,7 @@ module.exports = () => {
     bot.dialog('/requestAdditionalDetails', [
         (session, next) => {
             let options =  session.localizer.gettext(session.preferredLocale(), "AdditionalDetailsOptions");
-            builder.Prompts.choice(session, 'AdditionalDetailsPrompt', options);
+            builder.Prompts.choice(session, 'AdditionalDetailsPrompt', options, {'listStyle': 3});
         },
         (session, results) => {
             session.conversationData.description = results.response.entity;

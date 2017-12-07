@@ -25,7 +25,7 @@ bot.dialog('/', [
 bot.dialog('/promptButtons', [
     (session) => {
         let choices = ['Submit', 'Check problems', 'Check bill'];
-        builder.Prompts.choice(session, 'InitialPrompt', choices);
+        builder.Prompts.choice(session, 'InitialPrompt', choices, {'listStyle': 3});
     },
     (session, results) => {
         if (results.response) {
