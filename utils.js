@@ -19,7 +19,7 @@ module.exports = () => {
                 let result = JSON.parse(body);
                 callback(null, result);
             } else {
-                callback(error, null);
+                callback('Something failed, we are sorry.' + JSON.parse(body).message, null);
             }
         });
     };
