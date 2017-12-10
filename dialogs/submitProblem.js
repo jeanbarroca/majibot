@@ -88,7 +88,7 @@ module.exports = () => {
                 if (err) {
                     session.error(err);
                 } else {
-                    session.send(`Thanks! ${results.service_request_id}`);
+                    session.send(`Thanks! ${results[0].service_request_id}`);
                     session.endDialog();
                 }
             });
