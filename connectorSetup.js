@@ -11,6 +11,18 @@ module.exports = () => {
 
     global.bot = new builder.UniversalBot(connector);
 
+    global.quickReplies = require('botbuilder-quickreplies');
+
+    quickReplies.LocationPrompt.create(bot);
+
+    bot.use(quickReplies.QuickRepliesMiddleware);
+
+    // Persist userData
+    bot.set('persistUserData', true);
+
+    // Do not persist conversationData
+    bot.set(`persistConversationData`, true);
+
     // Setup Restify Server
     const server = restify.createServer();
 

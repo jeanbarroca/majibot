@@ -2,7 +2,7 @@ module.exports = () => {
     bot.dialog('/selectLocale', [
         (session) => {
             // Prompt the user to select their preferred locale
-            builder.Prompts.choice(session, 'What\'s your preferred language?', 'English|Swahili');
+            builder.Prompts.choice(session, 'What\'s your preferred language?', 'English|Swahili', {'listStyle': 3});
         },
         (session, results) => {
             // Update preferred locale
