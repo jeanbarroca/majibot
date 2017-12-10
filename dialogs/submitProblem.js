@@ -14,7 +14,7 @@ module.exports = () => {
         },
         // Step 4: Check phone
         (session, results, next) => {
-            session.replaceDialog('/submitPhone');
+            session.beginDialog('/submitPhone');
         },
         // Step 5: Submit request
         (session) => {
@@ -84,13 +84,12 @@ module.exports = () => {
                 session.endDialog();
                 break;
             case 'Continue':
-                session.send('You chose continue.')
                 session.endDialog();
                 break;
             default:
+                session.endDialog();        
                 break;
             }
-            session.endDialog();
         }
     ]);
 
@@ -106,6 +105,7 @@ module.exports = () => {
             submitServiceRequest(serviceRequest, (err, results) => {
                 if (err) {
                     session.error(err);
+                    session.send('We failed to create your problem!' + err)
                     session.endDialog();                    
                 } else {
                     session.send(`Thanks! ${results[0].service_request_id}`);
