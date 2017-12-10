@@ -1,9 +1,13 @@
 require('dotenv-extended').load();
 
-require('./connectorSetup.js')();
+require('./connectorSetup')();
+require('./utils.js')();
 
-require('./dialogs/selectLocale.js')();
-require('./dialogs/submitProblem.js')();
+
+require('./dialogs/selectLocale')();
+require('./dialogs/submitProblem')();
+require('./dialogs/submitPhone')();
+
 
 /*
 require('./dialogs/checkProblems.js')();
@@ -14,14 +18,14 @@ require('./dialogs/checkMyBill.js')();
 // Entry point of the bot
 bot.dialog('/', [
     function (session) {
-        session.replaceDialog('/submitProblem');
+        session.replaceDialog('/promptButtons');
     }
 ]);
 
 bot.dialog('/promptButtons', [
     (session) => {
-        let choices = ['Submit a problem', 'Check problems I\'ve submitted', 'Check my bill'];
-        builder.Prompts.choice(session, 'InitialPrompt', choices);
+        let choices = ['Submit', 'Check problems', 'Check bill'];
+        builder.Prompts.choice(session, 'InitialPrompt', choices, {'listStyle': 3});
     },
     (session, results) => {
         if (results.response) {
@@ -30,14 +34,14 @@ bot.dialog('/promptButtons', [
             // route to corresponding dialogs
 
             switch (selection) {
-            case 'Submit a problem':
+            case 'Submit':
                 session.replaceDialog('/submitProblem');
                 break;
-            case 'Check problems I\'ve submitted':
-                session.replaceDialog('/checkProblems');
+            case 'Check problems':
+                session.reset('/');
                 break;
-            case 'Check my bill':
-                session.replaceDialog('/checkMyBill');
+            case 'Check bill':
+                session.reset('/');
                 break;
             default:
                 session.reset('/');
