@@ -51,13 +51,6 @@ module.exports = () => {
 
             if (args.response) {
                 let location = args.response.entity;
-
-                if (location.coordinates.lat === null && location.coordinates.long === null) {
-                    session.send('We could not get your coordinates. We will proceed with default coordinates in Dar es Salaam and fix that later');
-                    session.conversationData.lat = process.env.LAT;
-                    session.conversationData.long = process.env.LONG;
-                }
-
                 session.conversationData.lat = location.coordinates.lat;
                 session.conversationData.long = location.coordinates.long;
             }
@@ -78,12 +71,16 @@ module.exports = () => {
 
             switch (selection) {
             case 'Send text':
+                session.conversationData.description = 'Text';
                 session.endDialog();
                 break;
             case 'Send picture':
+                session.conversationData.description = 'Picture';
+                session.conversationData.media_url = 'https://www.mopa.co.mz/images/png/mopa-logo.png';
                 session.endDialog();
                 break;
             case 'Continue':
+                session.conversationData.description = 'None';
                 session.endDialog();
                 break;
             default:
@@ -95,17 +92,18 @@ module.exports = () => {
 
     bot.dialog('/submitRequest', [
         (session, next) => {
-            let serviceRequest = [];
-            serviceRequest.service_code = session.conversationData.service_code;
-            serviceRequest.lat = session.conversationData.lat;
-            serviceRequest.long = session.conversationData.long;
-            serviceRequest.phone = session.userData.Phone;
-            serviceRequest.description = session.conversationData.description;
+            let serviceRequest = {
+                'description': session.conversationData.description,
+                'first_name': (session.message.address.user.name) ? session.message.address.user.name : '',
+                'lat': (session.conversationData.lat) ? session.conversationData.lat : process.env.DEFAULT_LAT,
+                'long': (session.conversationData.long) ? session.conversationData.long : process.env.DEFAULT_LONG,
+                'phone': session.userData.Phone,
+                'service_code' : session.conversationData.service_code
+            }
 
             submitServiceRequest(serviceRequest, (err, results) => {
                 if (err) {
                     session.error(err);
-                    session.send('We failed to create your problem!' + err)
                     session.endDialog();                    
                 } else {
                     session.send(`Thanks! ${results[0].service_request_id}`);

@@ -2,7 +2,7 @@
     "InitialPrompt" : "How can I help you today?",
     "SubmitProblem" : "Please select the problem category you're trying to submit.",
     "AdditionalDetailsPrompt" : "We're almost ready to submit the problem. More information about the problem will help us solve it faster. Can you add some additional details?",
-    "AdditionalDetailsOptions" : "Send text |Send picture |Continue",
+    "AdditionalDetailsOptions" : "Send text|Send picture|Continue",
     "Please share your location..." : "We will now need to collect your location to know where the problem is. Please click the Share location button so that we can get your coordinates. You need to enable your GPS to do it.",
     "SubmitPhone" : "Could you please tell us your phone number so that we send you updates on the problem status?"
 }
