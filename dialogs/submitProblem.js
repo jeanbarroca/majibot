@@ -1,7 +1,7 @@
 module.exports = () => {
     bot.dialog('/submitProblem', [
         // Step 1: Choose problem category
-        (session, next) => {
+        (session, results, next) => {
             session.beginDialog('/requestServiceCategory');
         },
         // Step 2: Request location
@@ -12,7 +12,11 @@ module.exports = () => {
         (session, results, next) => {
             session.beginDialog('/requestAdditionalDetails');
         },
-        // Step 4: Submit request
+        // Step 4: Check phone
+        (session, results, next) => {
+            session.replaceDialog('/submitPhone');
+        },
+        // Step 5: Submit request
         (session) => {
             session.beginDialog('/submitRequest');
         }
@@ -32,7 +36,6 @@ module.exports = () => {
         },
         (session, results, next) => {
             session.conversationData.service_code = session.dialogData.services[results.response.index].service_code;
-            session.send(`You submitted ${session.dialogData.services[results.response.index].service_name}`);
             session.endDialog();
         }
     ]);
@@ -49,14 +52,14 @@ module.exports = () => {
             if (args.response) {
                 let location = args.response.entity;
 
-                session.send(`Your location is: Longitude: ${location.coordinates.long}, Latitude: ${location.coordinates.lat}`);
+                if (location.coordinates.lat === null && location.coordinates.long === null) {
+                    session.send('We could not get your coordinates. We will proceed with default coordinates in Dar es Salaam and fix that later');
+                    session.conversationData.lat = process.env.LAT;
+                    session.conversationData.long = process.env.LONG;
+                }
+
                 session.conversationData.lat = location.coordinates.lat;
                 session.conversationData.long = location.coordinates.long;
-
-                // is user's phone set? if not, request it.
-                if (!session.userData.Phone) {
-                    session.replaceDialog('/submitPhone');
-                }
             }
 
             session.endDialog();
@@ -66,12 +69,27 @@ module.exports = () => {
 
     bot.dialog('/requestAdditionalDetails', [
         (session, next) => {
-            let options =  session.localizer.gettext(session.preferredLocale(), "AdditionalDetailsOptions");
+            let options = session.localizer.gettext(session.preferredLocale(), 'AdditionalDetailsOptions');
             builder.Prompts.choice(session, 'AdditionalDetailsPrompt', options, {'listStyle': 3});
         },
-        (session, results) => {
-            session.conversationData.description = results.response.entity;
-            session.send(`Success!\n Service request description\n Phone: ${session.userData.Phone}\n Service code: ${session.conversationData.service_code}\n Coordinates: ${session.conversationData.lat}, ${session.conversationData.long}\n Description: ${session.conversationData.description}`);
+        (session, results, next) => {
+
+            let selection = results.response.entity;
+
+            switch (selection) {
+            case 'Send text':
+                session.endDialog();
+                break;
+            case 'Send picture':
+                session.endDialog();
+                break;
+            case 'Continue':
+                session.send('You chose continue.')
+                session.endDialog();
+                break;
+            default:
+                break;
+            }
             session.endDialog();
         }
     ]);
@@ -83,10 +101,12 @@ module.exports = () => {
             serviceRequest.lat = session.conversationData.lat;
             serviceRequest.long = session.conversationData.long;
             serviceRequest.phone = session.userData.Phone;
+            serviceRequest.description = session.conversationData.description;
 
             submitServiceRequest(serviceRequest, (err, results) => {
                 if (err) {
                     session.error(err);
+                    session.endDialog();                    
                 } else {
                     session.send(`Thanks! ${results[0].service_request_id}`);
                     session.endDialog();
