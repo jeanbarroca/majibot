@@ -15,6 +15,10 @@ require('./dialogs/checkMyBill.js')();
 */
 
 
+// Global actions
+bot.endConversationAction('goodbye', 'Goodbye :)', { matches: /^bye/i });
+bot.beginDialogAction('help', '/help', { matches: /^help/i });
+
 // Entry point of the bot
 bot.dialog('/', [
     function (session) {
@@ -48,5 +52,11 @@ bot.dialog('/promptButtons', [
                 break;
             }
         }
+    }
+]);
+
+bot.dialog('/help', [
+    function (session) {
+        session.endDialog("Hi! I am DAWASCO's MajiFix Bot!\n I can help you to report a new problem with a few steps, just select Submit for that.\nWe can also check the status of problems you have submitted, select Check My Problems for that.\nIn any moment you can type goodbye, to finish a conversation.\nHave a good day!\n");
     }
 ]);
