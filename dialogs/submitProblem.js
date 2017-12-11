@@ -87,7 +87,7 @@ module.exports = () => {
                 session.endDialog();
             }
             else {
-                session.conversationData.media_url = results.response.pop().contentUrl;
+                session.conversationData.media_url = results.response.map((attachment) => attachment.contentUrl);
                 session.conversationData.description = 'Created via Facebook Bot';
                 builder.Prompts.confirm(session,'AddDescription?');
             }
