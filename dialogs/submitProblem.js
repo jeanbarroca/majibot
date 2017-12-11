@@ -1,7 +1,7 @@
 module.exports = () => {
     bot.dialog('/submitProblem', [
         // Step 1: Choose problem category
-        (session, results, next) => {
+        (session, args, next) => {
             session.beginDialog('/requestServiceCategory');
         },
         // Step 2: Request location
@@ -12,10 +12,6 @@ module.exports = () => {
         (session, results, next) => {
             session.beginDialog('/requestAdditionalDetails');
         },
-        // Step 4: Check phone
-        (session, results, next) => {
-            session.beginDialog('/submitPhone');
-        },
         // Step 5: Submit request
         (session) => {
             session.beginDialog('/submitRequest');
@@ -23,7 +19,7 @@ module.exports = () => {
     ]);
 
     bot.dialog('/requestServiceCategory', [
-        (session, next) => {
+        (session, args, next) => {
             getServices((err, results) => {
                 if (err) {
                     session.error(err);
@@ -42,7 +38,7 @@ module.exports = () => {
 
     bot.dialog('/requestLocation', [
         // Step 2: Request location
-        (session, results, next) => {
+        (session, args, next) => {
 
             quickReplies.LocationPrompt.beginDialog(session);
 
@@ -61,7 +57,7 @@ module.exports = () => {
     ]);
 
     bot.dialog('/requestAdditionalDetails', [
-        (session, next) => {
+        (session, args, next) => {
             let options = session.localizer.gettext(session.preferredLocale(), 'AdditionalDetailsOptions');
             builder.Prompts.choice(session, 'AdditionalDetailsPrompt', options, {'listStyle': 3});
         },
@@ -71,34 +67,75 @@ module.exports = () => {
 
             switch (selection) {
             case 'Send text':
-                session.conversationData.description = 'Text';
-                session.endDialog();
+                builder.Prompts.text(session, 'AddDescription');
                 break;
             case 'Send picture':
-                session.conversationData.description = 'Picture';
-                session.conversationData.media_url = 'https://www.mopa.co.mz/images/png/mopa-logo.png';
-                session.endDialog();
+                builder.Prompts.attachment(session, 'AddPhoto');
                 break;
             case 'Continue':
-                session.conversationData.description = 'None';
-                session.endDialog();
+                session.conversationData.description = 'Created via Facebook Bot';
                 break;
             default:
                 session.endDialog();        
                 break;
             }
+        },
+        (session, results, next) => {
+            if (results.childId === "BotBuilder:prompt-text") {
+                session.conversationData.description = results.response;
+                session.endDialog();
+            }
+            else {
+                session.conversationData.media_url = results.response.pop().contentUrl;
+                session.conversationData.description = 'Created via Facebook Bot';
+                builder.Prompts.confirm(session,'AddDescription?');
+            }
+        },
+        (session, results, next) => {
+            if (results.response) {
+                builder.Prompts.text(session, 'AddDescription');                
+            }
+            else {
+                session.endDialog();
+            }
+        },
+        (session, results, next) => {
+            session.conversationData.description = results.response;
+            session.endDialog();
         }
     ]);
 
     bot.dialog('/submitRequest', [
-        (session, next) => {
+        (session, args, next) => {
+            if (session.userData.Phone == null) {            
+                session.beginDialog('/submitPhone');
+            }
+            else {
+                next();
+            }
+        },
+        (session, results, next) => {
+            session.send('ConfirmPhone', session.userData.Phone);
+            builder.Prompts.confirm(session, 'Ok?');           
+        },
+        (session, results, next) => {
+            if (results.response) {
+                next();
+            }
+            else {
+                session.beginDialog('/submitPhone');
+            }
+        },
+        (session, results, next) => {
+
             let serviceRequest = {
                 'description': session.conversationData.description,
                 'first_name': (session.message.address.user.name) ? session.message.address.user.name : '',
                 'lat': (session.conversationData.lat) ? session.conversationData.lat : process.env.DEFAULT_LAT,
                 'long': (session.conversationData.long) ? session.conversationData.long : process.env.DEFAULT_LONG,
+                'media_url': (session.conversationData.media_url) ? session.conversationData.media_url : '',
                 'phone': session.userData.Phone,
-                'service_code' : session.conversationData.service_code
+                'service_code': session.conversationData.service_code
             }
 
             submitServiceRequest(serviceRequest, (err, results) => {
@@ -106,7 +143,7 @@ module.exports = () => {
                     session.error(err);
                     session.endDialog();                    
                 } else {
-                    session.send(`Thanks! ${results[0].service_request_id}`);
+                    session.send('NewProblemThankYou', results.pop().service_request_id);
                     session.endDialog();
                 }
             });
