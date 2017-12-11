@@ -1,3 +1,15 @@
 {
-    "InitialPrompt" : "Ninawezaje kukusaidia leo?"
+    "InitialPrompt" : "Karibu! Mimi ni DAWASCO MajiFix Bot!\nNinakuwezesha kutuma matatizo yako DAWASCO kutia hatua chache.\nNikusaidiaje leo?",
+    "SubmitProblem" : "Tafadhali chagua aina ya tatizo ulilonalo.",
+    "AdditionalDetailsPrompt" : "Maelezo zaidi juu ya tatizo yatatusaidia kutatua haraka. Je!, Unaweza kutupa maelezo ya ziada?",
+    "AdditionalDetailsOptions" : "Tuma maelezo|Tuma picha|Endelea",
+    "Please share your location..." : "Tungependa kukusanya taarifa ya eneo lako kujua tatizo lilipo.\nTafadhali bonyeza batani ya eneo na kushare eneo la tatizo na sisi.\nUtahitajika kuwasha GPS ili kufanikisha.\nKuendelea bila kutuma eneo, andika quit.",
+    "SubmitPhone" : "Je, ungependa kutuambia namba yako ya simu ili tuweze kukutumia maendeleo ya tatizo tunapolifanyia kazi?",
+    "NewProblemThankYou" : "Asante! \nTumepokea tatizo lako kwa tiketi namba: %s\nUtapokea meseji(SMS) ya udhibitisho.",
+    "HelpMessage" : "Hi! Mimi ni DAWASCO MajiFix Bot!\n Ninakuwezesha kuripoti tatizo lako katika hatua chache, chagua Submit kuendelea.\nWakati wowote andika cancel, kuondoka.\nSiku Njema!\n",
+    "ThankYouPhoneStored": "Tutakufikia kupitia namba ya simu %s",
+    "ConfirmPhone" : "Tunakaribia kutuma tatizo lako.\nNamba yako ya simu ni: %s",
+    "AddDescription" : "Tafadhali andika maelezo ya tatizo",
+    "AddDescription?" : "Je, unataka kuelezea tatizo?",
+    "AddPhoto" : "Tafadhali ambatisha picha ya tatizo"
 }
