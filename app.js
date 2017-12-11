@@ -15,38 +15,51 @@ require('./dialogs/checkMyBill.js')();
 */
 
 
+// Global actions
+bot.endConversationAction('goodbye', 'Goodbye :)', { matches: /^cancel/i });
+bot.beginDialogAction('help', '/help', { matches: /^help/i });
+bot.beginDialogAction('language', '/selectLocale', { matches: /^language/i });
+bot.beginDialogAction('phone', '/submitPhone', { matches: /^phone/i });
+
+
 // Entry point of the bot
 bot.dialog('/', [
-    function (session) {
+    (session) => {
         session.replaceDialog('/promptButtons');
     }
 ]);
 
 bot.dialog('/promptButtons', [
-    (session) => {
-        let choices = ['Submit', 'Check problems', 'Check bill'];
+    (session, args, next) => {
+        let choices = ['Submit a problem', 'Change phone number', 'Change language'];
         builder.Prompts.choice(session, 'InitialPrompt', choices, {'listStyle': 3});
     },
-    (session, results) => {
+    (session, results, next) => {
         if (results.response) {
             let selection = results.response.entity;
 
             // route to corresponding dialogs
 
             switch (selection) {
-            case 'Submit':
+            case 'Submit a problem':
                 session.replaceDialog('/submitProblem');
                 break;
-            case 'Check problems':
-                session.reset('/');
+            case 'Change phone number':
+                session.reset('/submitPhone');
                 break;
-            case 'Check bill':
-                session.reset('/');
+            case 'Change language':
+                session.reset('/selectLocale');
                 break;
             default:
                 session.reset('/');
                 break;
             }
         }
+    }
+]);
+
+bot.dialog('/help', [
+    function (session) {
+        session.endDialog('HelpMessage');
     }
 ]);

@@ -1,15 +1,16 @@
 module.exports = () => {
     bot.dialog('/submitPhone', [
-        (session) => {
-            builder.Prompts.text(session, 'SubmitPhone');
+        (session, results, next) => {
+                builder.Prompts.text(session, 'SubmitPhone');                
         },
-        (session, results) => {
+        (session, results, next) => {
             session.userData.Phone = results.response;
+            session.send('ThankYouPhoneStored', session.userData.Phone)
 
             /* TODO: Confirm phone number after submission.
                TODO: Validate phone number */
 
-            session.replaceDialog('/submitRequest');
+            session.endDialog();
         }
 
     ]);

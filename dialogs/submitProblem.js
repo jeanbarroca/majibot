@@ -1,7 +1,7 @@
 module.exports = () => {
     bot.dialog('/submitProblem', [
         // Step 1: Choose problem category
-        (session, next) => {
+        (session, args, next) => {
             session.beginDialog('/requestServiceCategory');
         },
         // Step 2: Request location
@@ -12,14 +12,14 @@ module.exports = () => {
         (session, results, next) => {
             session.beginDialog('/requestAdditionalDetails');
         },
-        // Step 4: Submit request
+        // Step 5: Submit request
         (session) => {
             session.beginDialog('/submitRequest');
         }
     ]);
 
     bot.dialog('/requestServiceCategory', [
-        (session, next) => {
+        (session, args, next) => {
             getServices((err, results) => {
                 if (err) {
                     session.error(err);
@@ -32,14 +32,13 @@ module.exports = () => {
         },
         (session, results, next) => {
             session.conversationData.service_code = session.dialogData.services[results.response.index].service_code;
-            session.send(`You submitted ${session.dialogData.services[results.response.index].service_name}`);
             session.endDialog();
         }
     ]);
 
     bot.dialog('/requestLocation', [
         // Step 2: Request location
-        (session, results, next) => {
+        (session, args, next) => {
 
             quickReplies.LocationPrompt.beginDialog(session);
 
@@ -48,15 +47,8 @@ module.exports = () => {
 
             if (args.response) {
                 let location = args.response.entity;
-
-                session.send(`Your location is: Longitude: ${location.coordinates.long}, Latitude: ${location.coordinates.lat}`);
                 session.conversationData.lat = location.coordinates.lat;
                 session.conversationData.long = location.coordinates.long;
-
-                // is user's phone set? if not, request it.
-                if (!session.userData.Phone) {
-                    session.replaceDialog('/submitPhone');
-                }
             }
 
             session.endDialog();
@@ -65,30 +57,93 @@ module.exports = () => {
     ]);
 
     bot.dialog('/requestAdditionalDetails', [
-        (session, next) => {
-            let options =  session.localizer.gettext(session.preferredLocale(), "AdditionalDetailsOptions");
+        (session, args, next) => {
+            let options = session.localizer.gettext(session.preferredLocale(), 'AdditionalDetailsOptions');
             builder.Prompts.choice(session, 'AdditionalDetailsPrompt', options, {'listStyle': 3});
         },
-        (session, results) => {
-            session.conversationData.description = results.response.entity;
-            session.send(`Success!\n Service request description\n Phone: ${session.userData.Phone}\n Service code: ${session.conversationData.service_code}\n Coordinates: ${session.conversationData.lat}, ${session.conversationData.long}\n Description: ${session.conversationData.description}`);
+        (session, results, next) => {
+
+            let selection = results.response.entity;
+
+            switch (selection) {
+            case 'Send text':
+                builder.Prompts.text(session, 'AddDescription');
+                break;
+            case 'Send picture':
+                builder.Prompts.attachment(session, 'AddPhoto');
+                break;
+            case 'Continue':
+                session.conversationData.description = 'Created via Facebook Bot';
+                break;
+            default:
+                session.endDialog();        
+                break;
+            }
+        },
+        (session, results, next) => {
+            if (results.childId === "BotBuilder:prompt-text") {
+                session.conversationData.description = results.response;
+                session.endDialog();
+            }
+            else {
+                session.conversationData.media_url = results.response.pop().contentUrl;
+                session.conversationData.description = 'Created via Facebook Bot';
+                builder.Prompts.confirm(session,'AddDescription?');
+            }
+        },
+        (session, results, next) => {
+            if (results.response) {
+                builder.Prompts.text(session, 'AddDescription');                
+            }
+            else {
+                session.endDialog();
+            }
+        },
+        (session, results, next) => {
+            session.conversationData.description = results.response;
             session.endDialog();
         }
     ]);
 
     bot.dialog('/submitRequest', [
-        (session, next) => {
-            let serviceRequest = [];
-            serviceRequest.service_code = session.conversationData.service_code;
-            serviceRequest.lat = session.conversationData.lat;
-            serviceRequest.long = session.conversationData.long;
-            serviceRequest.phone = session.userData.Phone;
+        (session, args, next) => {
+            if (session.userData.Phone == null) {            
+                session.beginDialog('/submitPhone');
+            }
+            else {
+                next();
+            }
+        },
+        (session, results, next) => {
+            session.send('ConfirmPhone', session.userData.Phone);
+            builder.Prompts.confirm(session, 'Ok?');           
+        },
+        (session, results, next) => {
+            if (results.response) {
+                next();
+            }
+            else {
+                session.beginDialog('/submitPhone');
+            }
+        },
+        (session, results, next) => {
+
+            let serviceRequest = {
+                'description': session.conversationData.description,
+                'first_name': (session.message.address.user.name) ? session.message.address.user.name : '',
+                'lat': (session.conversationData.lat) ? session.conversationData.lat : process.env.DEFAULT_LAT,
+                'long': (session.conversationData.long) ? session.conversationData.long : process.env.DEFAULT_LONG,
+                'media_url': (session.conversationData.media_url) ? session.conversationData.media_url : '',
+                'phone': session.userData.Phone,
+                'service_code': session.conversationData.service_code
+            }
 
             submitServiceRequest(serviceRequest, (err, results) => {
                 if (err) {
                     session.error(err);
+                    session.endDialog();                    
                 } else {
-                    session.send(`Thanks! ${results.service_request_id}`);
+                    session.send('NewProblemThankYou', results.pop().service_request_id);
                     session.endDialog();
                 }
             });
