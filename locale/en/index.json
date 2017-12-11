@@ -7,6 +7,9 @@
     "SubmitPhone" : "Could you please tell us your phone number so that we send you updates on the problem status?",
     "NewProblemThankYou" : "Thank you! \nWe've created a new problem with the following reference number: %s\nYou will receive an SMS with the confirmation.",
     "HelpMessage" : "Hi! I am DAWASCO's MajiFix Bot!\n I can help you to report a new problem with a few steps, just select Submit for that.\nIn any moment you can type cancel, to finish a conversation.\nHave a good day!\n",
-    "ThankYouPhoneStored": "Thank you! We will reach you through the phone number %s",
-    "ConfirmPhone" : "We're ready to submit your problem.\nI've got this phone number on record: %s"
+    "ThankYouPhoneStored": "We will reach you through the phone number %s",
+    "ConfirmPhone" : "We're ready to submit your problem.\nI've got this phone number on record: %s",
+    "AddDescription" : "Please write a description of the problem",
+    "AddDescription?" : "Do you want to write a description of the problem?",
+    "AddPhoto" : "Please attach a picture of the problem"
 }

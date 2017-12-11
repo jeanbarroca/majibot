@@ -74,6 +74,7 @@ module.exports = () => {
                 break;
             case 'Continue':
                 session.conversationData.description = 'Created via Facebook Bot';
+                session.endDialog();
                 break;
             default:
                 session.endDialog();        

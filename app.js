@@ -20,7 +20,7 @@ bot.endConversationAction('goodbye', 'Goodbye :)', { matches: /^cancel/i });
 bot.beginDialogAction('help', '/help', { matches: /^help/i });
 bot.beginDialogAction('language', '/selectLocale', { matches: /^language/i });
 bot.beginDialogAction('phone', '/submitPhone', { matches: /^phone/i });
-
+bot.beginDialogAction('submitProblem', '/submitProblem');
 
 // Entry point of the bot
 bot.dialog('/', [
