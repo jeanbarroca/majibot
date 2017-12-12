@@ -145,7 +145,7 @@ module.exports = () => {
                     session.endDialog();                    
                 } else {
                     session.send('NewProblemThankYou', results.pop().service_request_id);
-                    session.endDialog();
+                    session.endConversation();
                 }
             });
         }
