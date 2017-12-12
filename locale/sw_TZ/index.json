@@ -1,5 +1,6 @@
 {
     "InitialPrompt" : "Karibu! Mimi ni DAWASCO MajiFix Bot!\nNinakuwezesha kutuma matatizo yako DAWASCO kutia hatua chache.\nNikusaidiaje leo?",
+    "InitialPromptOptions" : "Submit a problem|Change phone number|Change language",
     "SubmitProblem" : "Tafadhali chagua aina ya tatizo ulilonalo.",
     "AdditionalDetailsPrompt" : "Maelezo zaidi juu ya tatizo yatatusaidia kutatua haraka. Je!, Unaweza kutupa maelezo ya ziada?",
     "AdditionalDetailsOptions" : "Tuma maelezo|Tuma picha|Endelea",

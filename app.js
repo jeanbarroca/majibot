@@ -31,7 +31,7 @@ bot.dialog('/', [
 
 bot.dialog('/promptButtons', [
     (session, args, next) => {
-        let choices = ['Submit a problem', 'Change phone number', 'Change language'];
+        let choices = session.localizer.gettext(session.preferredLocale(), 'InitialPromptOptions');   
         builder.Prompts.choice(session, 'InitialPrompt', choices, {'listStyle': 3});
     },
     (session, results, next) => {

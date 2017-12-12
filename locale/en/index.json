@@ -1,5 +1,6 @@
 {
     "InitialPrompt" : "Karibu! I am DAWASCO's MajiFix Bot!\nI can help you submit problems to DAWASCO in a few steps.\nHow can I help you today?",
+    "InitialPromptOptions" : "Submit a problem|Change phone number|Change language",
     "SubmitProblem" : "Please select the type of problem you want to report.",
     "AdditionalDetailsPrompt" : "More information about the problem will help us solve it faster. Can you add some additional details?",
     "AdditionalDetailsOptions" : "Send text|Send picture|Continue",
